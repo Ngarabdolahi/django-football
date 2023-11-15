@@ -32,3 +32,5 @@ def teachers_search2(request):
                     "majores":teacher.majore.name
                     })
     return JsonResponse({"teachers":tcs})
+def football(request):
+    pass
