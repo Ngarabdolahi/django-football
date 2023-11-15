@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    search:<input type="text" id="txtSearch">
+    majores:<select id="sel1" name="major"></select>
+    <table border="1" id="tbl1">
+    </table>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script>
+        function getMajore() {
+            $.ajax({
+                url: "/app/majores/get/all/",
+                method: "post",
+                dataType: "Json",
+                success: function (result) {
+                    let majores = result.majores
+                    for (let majore of majores)
+                        $("select[name=major]").append(`<option value=${majore.id}>${majore.name}</option>`)
+                }
+            })
+        }
+        getMajore()
+        function search() {
+            $.ajax({
+                url: "/app/teachers/search2/",
+                method: "post",
+                dataType: "Json",
+                data: { "search": $("#txtSearch").val(), "major": $("#sel1").val() },
+                success: function (result) {
+                    $("#tbl1").empty()
+                    let teachers = result.teachers
+                    for (let teacher of teachers)
+                        $("#tbl1").append(`<tr><td>${teacher.id}</td>
+                    <td>${teacher.name}</td>
+                    <td>${teacher.family}</td>
+                    <td>${teacher.majores}</td></tr>`)
+                }
+            })
+        }
+        $("#txtSearch").keyup(function () {
+            // alert("key")
+            search()
+        })
+        $("#sel1").change(function () {
+            // alert("ch")
+            search()
+        })
+
+    </script>
+</body>
+
+</html>
